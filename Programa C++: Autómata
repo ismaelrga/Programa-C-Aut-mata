@@ -1,0 +1,51 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+// Función que procesa la palabra en el autómata
+bool procesarAutomata(const string& palabra) {
+    // Estado inicial
+    string estado = "q0";
+
+    // Procesar cada símbolo de la palabra
+    for (char simbolo : palabra) {
+        switch (estado[1]) { // Utiliza el segundo carácter del estado para simplificar
+            case '0':
+                if (simbolo == 'a') estado = "q1";
+                else if (simbolo == 'b') estado = "q2";
+                else return false; // Símbolo no reconocido
+                break;
+            case '1':
+                if (simbolo == 'a' || simbolo == 'b') estado = "q1";
+                else return false;
+                break;
+            case '2':
+                if (simbolo == 'b') estado = "q2";
+                else if (simbolo == 'a') estado = "q0";
+                else return false;
+                break;
+            default:
+                return false; // Estado no reconocido
+        }
+    }
+
+    // Verificar si el estado final es de aceptación
+    return estado == "q1" || estado == "q2";
+}
+
+int main() {
+    // Lista de palabras para probar
+    string palabras[] = {"ab", "ba", "aaa", "bba", "abb", "bbb", "aab"};
+    int cantidadPalabras = sizeof(palabras) / sizeof(palabras[0]);
+
+    // Probar cada palabra en el autómata
+    for (int i = 0; i < cantidadPalabras; ++i) {
+        bool esAceptada = procesarAutomata(palabras[i]);
+        cout << "La palabra '" << palabras[i] << "' " 
+             << (esAceptada ? "es aceptada." : "no es aceptada.") 
+             << endl;
+    }
+
+    return 0;
+}
